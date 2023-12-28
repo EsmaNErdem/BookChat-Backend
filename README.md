@@ -64,7 +64,7 @@ jest -i
 
 ## Database Schema
 
-![Database Schema](../static/bookclub-db.png)
+![Database Schema](./static/bookclub-db.png)
 
 **Entities:**
 
