@@ -24,7 +24,6 @@ Welcome to the backend documentation of the Book Chat App. This Node, Express, a
 
 ## Tech Stack
 
-
 * Node.js/Express: The backend server is built using Node.js and the Express framework.
 
 * PostgreSQL: PostgreSQL is used as relational database to store and manage data efficiently.
@@ -34,7 +33,7 @@ Welcome to the backend documentation of the Book Chat App. This Node, Express, a
 1. Clone the Project: Navigate to the directory where you want to clone the project and run:
 
 ```
-git clone https://github.com/EsmaNErdem/capstone2
+git clone https://github.com/EsmaNErdem/BookChat-Backend.git
 ```
 
 2. Install Dependencies: Install the project dependencies using npm:
@@ -43,7 +42,7 @@ git clone https://github.com/EsmaNErdem/capstone2
 npm install
 ```
 
-3. Creating jobly database and test database while seeding initial data:
+3. Creating book_club database and test database while seeding initial data:
 
 ```
 psql
