@@ -68,7 +68,9 @@ describe("Book Routes API Calls", () => {
   /************************************** GET /books/all//:page */
   describe("GET /books/all/:page", function () {
     test("should get lists of books from mocked external API data", async function () {
-      const resp = await request(app).get("/books/all/0");
+      const resp = await request(app)
+        .get("/books/all/0")
+        .set("authorization", `User Token ${u1Token}`);
       expect(resp.body).toEqual({
         books:
         [
@@ -111,6 +113,7 @@ describe("Book Routes API Calls", () => {
       const resp = await request(app)
         .get("/books/search/1")
           .query({search:"Book"})
+          .set("authorization", `User Token ${u1Token}`);
       expect(resp.body).toEqual({
         books:
         [
@@ -137,7 +140,9 @@ describe("Book Routes API Calls", () => {
     });
 
     test("should throw error if no search provided", async function () {
-        const resp = await request(app).get("/books/search/0");
+        const resp = await request(app)
+          .get("/books/search/0")
+          .set("authorization", `User Token ${u1Token}`);
         expect(resp.statusCode).toEqual(400);
     });
   });
@@ -145,7 +150,9 @@ describe("Book Routes API Calls", () => {
   /************************************** GET /books/:id*/
   describe("GET /books/:id", function () {
     test("should get book detail from mocked external API data", async function () {
-      const resp = await request(app).get("/books/3");
+      const resp = await request(app)
+        .get("/books/3")
+        .set("authorization", `User Token ${u1Token}`);
       expect(resp.body).toEqual({
             book: {
                 id: '3',
