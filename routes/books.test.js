@@ -90,6 +90,12 @@ describe("Books Database Routes", function () {
                 ]
         });
       });
+
+      test("should fail for anon", async function () {
+        const resp = await request(app)
+          .get("/books/all-db/1");
+        expect(resp.statusCode).toEqual(401);
+      });
   });
 
     /************************************** POST /books/:id/users/:username */

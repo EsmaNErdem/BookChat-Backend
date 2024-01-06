@@ -99,11 +99,19 @@ describe("Book Routes API Calls", () => {
     test("should handle error from external API calls", async function () {
         Book.getListOfBooks.mockResolvedValue(new ApiNotFoundError("Testing"));
         try {
-            const resp = await request(app).get("/books/all//0");
+            const resp = await request(app)
+              .get("/books/all/0")
+              .set("authorization", `User Token ${u1Token}`);
         } catch (e) {
             expect(e instanceof ApiNotFoundError).toBeTruthy();
             expect(resp.statusCode).toEqual(404);
         }
+    });    
+
+    test("should fail for anon", async function () {
+      const resp = await request(app)
+        .get("/books/all/0");
+      expect(resp.statusCode).toEqual(401);
     });
   });
 
@@ -144,7 +152,13 @@ describe("Book Routes API Calls", () => {
           .get("/books/search/0")
           .set("authorization", `User Token ${u1Token}`);
         expect(resp.statusCode).toEqual(400);
-    });
+    }); 
+
+    test("should fail for anon", async function () {
+      const resp = await request(app)
+        .get("/books/search/0");
+      expect(resp.statusCode).toEqual(401);
+    });    
   });
 
   /************************************** GET /books/:id*/
@@ -165,5 +179,11 @@ describe("Book Routes API Calls", () => {
             }
       });
     });
+
+    test("should fail for anon", async function () {
+      const resp = await request(app)
+        .get("/books/3");
+      expect(resp.statusCode).toEqual(401);
+    }); 
   });
 })
