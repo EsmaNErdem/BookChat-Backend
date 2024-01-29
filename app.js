@@ -11,8 +11,9 @@ const { NotFoundError } = require("./expressError");
 /** IMPORT MIDDLEWARE AND ROUTES */
 const { authenticateJWT } = require("./middleware/auth");
 const usersRoutes = require("./routes/users");
-const booksRoutes =  require("./routes/books")
-const reviewRoutes = require("./routes/reviews")
+const booksRoutes =  require("./routes/books");
+const reviewRoutes = require("./routes/reviews");
+const chatRoutes = require("./routes/chats");
 
 // morgan middleware for understanding how your Express application is behaving, diagnosing issues, ensuring security, and optimizing performance.
 const morgan = require("morgan");
@@ -30,6 +31,49 @@ app.use(authenticateJWT);
 app.use("/users", usersRoutes);
 app.use("/books", booksRoutes);
 app.use("/reviews", reviewRoutes);
+app.use("/chats", chatRoutes);
+
+// /** WEBSOCKETS-CHAT */
+// // allow for app.ws routes for websocket routes
+const wsExpress = require('express-ws')(app);
+const Chat = require("./models/chats/chat");
+const ChatUser = require("./models/chats/chatUser");
+
+app.ws('/chat/:roomName', function(ws, req, next) {
+  try {
+    const roomName = req.params.roomName.split(',').sort().join('');
+    
+    const user = new ChatUser(
+        ws.send.bind(ws), // fn to call to message this user
+        roomName // name of room for user
+      );
+      
+      // register handlers for message-received, connection-closed
+      ws.on('message', function(data) {
+          try {
+            /**
+             * Handles incoming message with current room websocket connection
+             * Saves message to database
+             */
+            const msg = JSON.parse(data);
+            user.handleMessage(msg);
+            Chat.handleMessage(msg, roomName);           
+          } catch (err) {
+        console.error(err);
+      }
+    });
+
+    ws.on('close', function() {
+      try {
+          user.handleClose();
+      } catch (err) {
+          console.error(err);
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

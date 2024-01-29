@@ -1,8 +1,8 @@
 CREATE TABLE users (
   username TEXT PRIMARY KEY,
   password TEXT NOT NULL,
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
+  first_name TEXT,
+  last_name TEXT,
   img TEXT DEFAULT '../static/user-profile.jpg',
   email TEXT NOT NULL
     CHECK (position('@' IN email) > 1)
@@ -58,6 +58,27 @@ CREATE TABLE followers (
   PRIMARY KEY (following, followed_by)
 );
 
+CREATE TABLE rooms (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE room_members (
+  room INTEGER REFERENCES rooms(id) ON DELETE CASCADE,
+  username TEXT REFERENCES users(username) ON DELETE CASCADE,
+  PRIMARY KEY (room, username),
+  UNIQUE (room, username)
+
+);
+
+CREATE TABLE messages (
+  id SERIAL PRIMARY KEY,
+  room INTEGER REFERENCES rooms(id) ON DELETE CASCADE,
+  username TEXT REFERENCES users(username) ON DELETE CASCADE,
+  message TEXT NOT NULL,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- BookShelves
 -- -
